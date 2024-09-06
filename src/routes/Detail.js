@@ -79,15 +79,26 @@ function Detail(props) {
 }
 
 function TabContent({ tab }) {
-    if (tab === 0) {
-        return <div>내용0</div>
-    }
-    if (tab === 1) {
-        return <div>내용1</div>
-    }
-    if (tab === 2) {
-        return <div>내용2</div>
-    }
+    let [fade, setFade] = useState('')
+    let [opacityDegree, changeOpacity] = useState(0)
+
+    useEffect(() => {
+       let fadeTimer = setTimeout(()=> {
+            setFade('end')
+            changeOpacity(1)
+        } , 200)
+        return () => {
+            clearTimeout(fadeTimer)
+            setFade('')
+            changeOpacity(0)
+        }
+    }, [tab])
+
+    return (
+        <div className={'start ' + fade} style={{ opacity: opacityDegree }}>
+            {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
+        </div>
+    )
 }
 
 export default Detail;

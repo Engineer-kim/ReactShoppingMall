@@ -6,6 +6,17 @@
   height: 40vmin;
   pointer-events: none;
 }
+.start {
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+.end {
+  transform: scale(1);
+  opacity: 1;
+}
+
 
 .main-bg {
   height : 300px;
