@@ -57,8 +57,6 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
-      <Link to="/">홈</Link>
-      <Link to="/detail">상세페이지</Link>
       <Routes>
         <Route path='/' element={
           <>
