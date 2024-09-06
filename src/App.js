@@ -6,15 +6,45 @@ import './App.css';
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail';
+import axios from 'axios';
 
 function App() {
 
   let [shoes] = useState(data);
   let navigate = useNavigate();
+  let [additionalShoes, setAdditionalShoes] = useState([]);
+  let [count , changeCount] = useState(0);
+  let [loading, setLoading] = useState(false);
 
 
 
   console.log(shoes);
+ 
+  const getData = () => {
+    console.log("count:::::::::::" +count)
+    if (count >= 2) {
+      alert("더이상 가져올 상품 없음");
+      return;
+    }
+    const clickCount = count + 1;
+    changeCount(clickCount);
+  
+    setLoading(true);
+    
+    axios.get('https://codingapple1.github.io/shop/data2.json')
+      .then((result) => {
+        console.log(result.data);
+        setAdditionalShoes(prevShoes => [...prevShoes, ...result.data]);
+      })
+      .catch(() => {
+        console.log('실패함');
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 250);
+      })
+  };
 
   return (
     <div className='App'>
@@ -34,23 +64,33 @@ function App() {
           <>
             <div className='main-bg'></div>
             <div className="container">
-              <div className="row">
-                {/* <Product shoes = {shoes[1]} i={2}/>
-                  <Product shoes = {shoes[2]} i={3}/> */}
-                {
-                  shoes.map((a, i) => {
-                    return (
-                      <Product shoes={shoes[i]} i={i} />
-                    )
-                  })
-                }
+            <div className="row">
+                  {/* 로딩 중일 때 */}
+                  {loading ? (
+                    <IsLoading />
+                  ) : (
+                    <>
+                      {shoes.map((a, i) => (
+                        <Product key={i} shoes={shoes[i]} i={i} />
+                      ))}
+                      {additionalShoes.map((shoe, i) => (
+                        <Product
+                          key={i + shoes.length}
+                          shoes={shoe}
+                          i={i + shoes.length}
+                        />
+                      ))}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          </>
-        } />
-        <Route path='/detail/:id' element={<Detail shoes = {shoes} />} />
+              <button onClick={getData}>더보기</button>
+            </>
+          }
+        />
+        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+      </Routes>
 
-        </Routes>
     </div>
   );
 }
@@ -61,6 +101,14 @@ function Product(props) {
       <img src={`https://codingapple1.github.io/shop/shoes${props.i + 1}.jpg`} width="80%" />
       <h4>{props.shoes.title}</h4>
       <p>{props.shoes.price}</p>
+    </div>
+  )
+}
+
+function IsLoading(){
+  return (
+    <div className=" alert alert-warning">
+           <p>로딩 중입니다...</p>
     </div>
   )
 }
