@@ -1,14 +1,12 @@
+/*eslint-disable*/
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import data from "../data";
 import styled from 'styled-components';
 import { Nav } from 'react-bootstrap';
-import { Context1 } from "./../App";
+import { Cart } from '../routes/Cart.js'
 
 function Detail(props) {
-
-    let {재고} = useContext(Context1);
-
 
     const tabs = ["탭0", "탭1", "탭2"];
     const [isVisible, setIsVisible] = useState(true);
@@ -64,7 +62,7 @@ function Detail(props) {
                     <h4 className="pt-5">{findProduct.title}</h4>
                     <p>{findProduct.content}</p>
                     <p>{findProduct.price}</p>
-                    <button className="btn btn-danger">주문하기</button>
+                    <button className="btn btn-danger" >주문하기</button>
                 </div>
             </div>
             <Nav variant="tabs" defaultActiveKey="link0">
@@ -103,6 +101,13 @@ function TabContent({ tab , shoes}) {
         <div className={'start ' + fade} style={{ opacity: opacityDegree }}>
             {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
         </div>
+    )
+}
+
+
+function AddOrder(){
+    return(
+       null
     )
 }
 
