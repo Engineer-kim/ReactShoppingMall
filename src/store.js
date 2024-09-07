@@ -15,12 +15,20 @@ const cart = createSlice({
                 }
                 return item;
             });
+        },
+        addItem(state, action){
+            const existingItem = state.find(item => item.id === action.payload.id);
+            if (existingItem) {
+                existingItem.count += 1;
+            } else {
+                state.push({ ...action.payload, count: 1 });
+            }
         }
     }
 });
 
 
-export let {changeQuantity} = cart.actions
+export let {changeQuantity , addItem} = cart.actions
 
 export default configureStore({
     reducer: {

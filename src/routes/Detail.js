@@ -1,13 +1,13 @@
 /*eslint-disable*/
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import data from "../data";
-import styled from 'styled-components';
+import { Router, useNavigate, useParams } from "react-router-dom";
 import { Nav } from 'react-bootstrap';
-import { Cart } from '../routes/Cart.js'
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem } from '../store';
 
 function Detail(props) {
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const tabs = ["탭0", "탭1", "탭2"];
     const [isVisible, setIsVisible] = useState(true);
     // const [isText, setIsText] = useState(false);
@@ -62,8 +62,13 @@ function Detail(props) {
                     <h4 className="pt-5">{findProduct.title}</h4>
                     <p>{findProduct.content}</p>
                     <p>{findProduct.price}</p>
-                    <button className="btn btn-danger" >주문하기</button>
+                    {console.log(findProduct)}
+                    
+                    <button className="btn btn-danger" onClick={() => {
+                        dispatch(addItem({id : findProduct.id, name : findProduct.title}))
+                    }}>주문하기</button>
                 </div>
+                <button className="btn btn-primary" onClick={() => navigate('/cart')}>장바구니로 이동</button>
             </div>
             <Nav variant="tabs" defaultActiveKey="link0">
                 {tabs.map((title, index) => (
@@ -74,22 +79,22 @@ function Detail(props) {
                     </Nav.Item>
                 ))}
             </Nav>
-            <TabContent tab={tab} shoes={props.shoes}/>
+            <TabContent tab={tab} shoes={props.shoes} />
 
         </div>
     )
 
 }
 
-function TabContent({ tab , shoes}) {
+function TabContent({ tab, shoes }) {
     let [fade, setFade] = useState('')
     let [opacityDegree, changeOpacity] = useState(0)
 
     useEffect(() => {
-       let fadeTimer = setTimeout(()=> {
+        let fadeTimer = setTimeout(() => {
             setFade('end')
             changeOpacity(1)
-        } , 200)
+        }, 200)
         return () => {
             clearTimeout(fadeTimer)
             setFade('')
@@ -104,11 +109,5 @@ function TabContent({ tab , shoes}) {
     )
 }
 
-
-function AddOrder(){
-    return(
-       null
-    )
-}
 
 export default Detail;
