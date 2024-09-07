@@ -3,7 +3,7 @@
 import { Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeName } from './../store/userSlice.js';
-import { changeQuantity  } from '../store.js'
+import { changeQuantity, minusItem  } from '../store.js'
 
 function Cart() {
 
@@ -35,6 +35,11 @@ function Cart() {
                                             dispatch(changeQuantity(idx));
                                         }}>
                                             +
+                                        </button>
+                                        <button onClick={() => {
+                                            dispatch(minusItem(idx));
+                                        }}>
+                                            -
                                         </button>
                                     </td>
                                 </tr>
