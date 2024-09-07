@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import data from "../data";
 import styled from 'styled-components';
 import { Nav } from 'react-bootstrap';
+import { Context1 } from "./../App";
 
 function Detail(props) {
+
+    let {재고} = useContext(Context1);
+
+
     const tabs = ["탭0", "탭1", "탭2"];
     const [isVisible, setIsVisible] = useState(true);
     // const [isText, setIsText] = useState(false);
@@ -71,14 +76,14 @@ function Detail(props) {
                     </Nav.Item>
                 ))}
             </Nav>
-            <TabContent tab={tab} />
+            <TabContent tab={tab} shoes={props.shoes}/>
 
         </div>
     )
 
 }
 
-function TabContent({ tab }) {
+function TabContent({ tab , shoes}) {
     let [fade, setFade] = useState('')
     let [opacityDegree, changeOpacity] = useState(0)
 
