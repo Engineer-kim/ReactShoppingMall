@@ -1,11 +1,13 @@
 /*eslint-disable*/
-import { useContext, useEffect, useState , startTransition  } from "react";
+import { useContext, useEffect, useState, startTransition } from "react";
 import { Router, useNavigate, useParams } from "react-router-dom";
 import { Nav } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../store';
+import { useLike } from "../hooks/like";
 
 function Detail(props) {
+   let [like, addLike] = useLike();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const tabs = ["탭0", "탭1", "탭2"];
@@ -14,7 +16,6 @@ function Detail(props) {
     //const [inputValue, setInputValue] = useState('');
 
     const [tab, tabChange] = useState(0);
-
 
     let { id } = useParams();
     let findProduct = props.shoes.find(x => x.id == id);
@@ -41,6 +42,7 @@ function Detail(props) {
         localStorage.setItem('watched', JSON.stringify(extractData))
     }, []);
 
+  
 
     // const handleInputChange = (e) => {
     //     const value = e.target.value;
@@ -72,6 +74,10 @@ function Detail(props) {
                         value={inputValue}
                         onChange={handleInputChange}
                     /> */}
+
+                    <h4>{like}</h4>
+                    <button onClick={() => {addLike()}}>❤</button>
+
                     <h4 className="pt-5">{findProduct.title}</h4>
                     <p>{findProduct.content}</p>
                     <p>{findProduct.price}</p>
