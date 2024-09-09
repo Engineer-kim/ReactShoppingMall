@@ -8,20 +8,19 @@ import { Routes, Route, Link, useNavigate, Outlet, json } from 'react-router-dom
 import Detail from './routes/Detail';
 import axios from 'axios';
 import Cart from './routes/Cart.js';
-
+import { useQuery } from 'react-query'; 
+ 
 export let Context1 = createContext();
 
 
 function App() {
   useEffect(() => {
-  
-    let watchedItems = localStorage.getItem('watched');
-    
+    let watchedItems = localStorage.getItem('watched')
+    //watched'라는 항목이 저장되어 있지 않은 경우
     if (!watchedItems) {
       localStorage.setItem('watched', JSON.stringify([]));
       return;
     }
-
     watchedItems = JSON.parse(watchedItems);
   }, []);
 
@@ -36,7 +35,7 @@ function App() {
   let [count, changeCount] = useState(0);
   let [loading, setLoading] = useState(false);
   let [재고] = useState([10, 11, 12]);
-
+  
 
 
   console.log(shoes);
@@ -67,6 +66,12 @@ function App() {
       })
   };
 
+
+  let result = useQuery('작명', () =>
+    axios.get('https://codingapple1.github.io/userdata.json')
+      .then((a) => { return a.data })
+  );
+  
   return (
     <div className='App'>
       <Navbar bg="dark" variant="dark">
@@ -75,6 +80,9 @@ function App() {
           <Nav className="me-auto">
             <Nav.Link onClick={() => { navigate('/') }}>Home</Nav.Link>
             <Nav.Link onClick={() => { navigate('/detail') }}>Detail</Nav.Link>
+          </Nav>
+          <Nav className='ms-auto' style={{color: 'white'}}>
+              {result.data && result.data.name} {/*데이터가 있으면 있는 데이터중 이름이란 벨류의 값을 읽어오도록함*/}
           </Nav>
         </Container>
       </Navbar>
