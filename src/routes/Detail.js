@@ -15,6 +15,13 @@ function Detail(props) {
 
     const [tab, tabChange] = useState(0);
 
+    
+    let { id } = useParams();
+    let findProduct = props.shoes.find(x => x.id == id);
+
+    if (!findProduct) {
+        return <div>상품을 찾을 수 없습니다.</div>;
+    }
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(false)
@@ -22,12 +29,16 @@ function Detail(props) {
         return () => clearTimeout(timer);
     }, [])
 
-    let { id } = useParams();
-    let findProduct = props.shoes.find(x => x.id == id);
 
-    if (!findProduct) {
-        return <div>상품을 찾을 수 없습니다.</div>;
-    }
+    useEffect(() => {
+        let extractData = localStorage.getItem('watched');
+        extractData =  JSON.parse(extractData);
+        extractData.push(findProduct.id);
+        extractData = new Set(extractData);
+        extractData = Array.from(extractData)
+        localStorage.setItem('watched', JSON.stringify(extractData))
+    }, []);
+
 
     // const handleInputChange = (e) => {
     //     const value = e.target.value;

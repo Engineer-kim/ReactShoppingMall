@@ -1,10 +1,10 @@
 /*eslint-disable*/
 import logo from './logo.svg';
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Navbar, Container, Nav } from 'react-bootstrap'
 import './App.css';
 import data from './data';
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Outlet, json } from 'react-router-dom';
 import Detail from './routes/Detail';
 import axios from 'axios';
 import Cart from './routes/Cart.js';
@@ -13,6 +13,22 @@ export let Context1 = createContext();
 
 
 function App() {
+  useEffect(() => {
+  
+    let watchedItems = localStorage.getItem('watched');
+    
+    if (!watchedItems) {
+      localStorage.setItem('watched', JSON.stringify([]));
+      return;
+    }
+
+    watchedItems = JSON.parse(watchedItems);
+  }, []);
+
+
+  let [itemId , clickItem] = useState([]);
+
+
 
   let [shoes] = useState(data);
   let navigate = useNavigate();
