@@ -130,10 +130,19 @@ function App() {
 }
 
 function Product(props) {
+  const navigate = useNavigate();
+  const goToDetail = (id) => {
+    navigate(`/detail/${id}`);
+  };
+
+  let indexValue = (parseInt(props.shoes.id) + 1)
+  // console.log("1번 신발 사진:::" + `https://codingapple1.github.io/shop/shoes${props.i}.jpg`);
+  // console.log("2번 신발 사진:::" + `https://codingapple1.github.io/shop/shoes${props.i+1}.jpg`);
+  // console.log("3번 신발 사진:::" + `https://codingapple1.github.io/shop/shoes${props.i+2}.jpg`);
   return (
     <div className="col-md-4">
-      <img src={`https://codingapple1.github.io/shop/shoes${props.i + 1}.jpg`} width="80%" />
-      <h4>{props.shoes.title}</h4>
+       <img src={`https://codingapple1.github.io/shop/shoes` + indexValue + `.jpg`} width="80%" alt={`shoes${parseInt(props.shoes.id) + 1}`} />
+      <h4 onClick={() => goToDetail(props.shoes.id)}>{props.shoes.title}</h4>
       <p>{props.shoes.price}</p>
     </div>
   )
@@ -164,6 +173,5 @@ function EventPage() {
     </div>
   )
 }
-
 
 export default App;

@@ -19,6 +19,8 @@ function Detail(props) {
     let { id } = useParams();
     let findProduct = props.shoes.find(x => x.id == id);
 
+    console.log("현재 신발 ID: ", id);
+
     if (!findProduct) {
         return <div>상품을 찾을 수 없습니다.</div>;
     }
@@ -62,7 +64,7 @@ function Detail(props) {
             }
             <div className="row">
                 <div className="col-md-6">
-                    <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
+                    <img src={`https://codingapple1.github.io/shop/shoes${parseInt(id) + 1}.jpg`} width="100%" />
                 </div>
                 <div className="col-md-6">
                     {/* <input
