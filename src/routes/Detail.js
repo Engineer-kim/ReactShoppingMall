@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState , startTransition  } from "react";
 import { Router, useNavigate, useParams } from "react-router-dom";
 import { Nav } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ function Detail(props) {
 
     const [tab, tabChange] = useState(0);
 
-    
+
     let { id } = useParams();
     let findProduct = props.shoes.find(x => x.id == id);
 
@@ -34,7 +34,7 @@ function Detail(props) {
 
     useEffect(() => {
         let extractData = localStorage.getItem('watched');
-        extractData =  JSON.parse(extractData);
+        extractData = JSON.parse(extractData);
         extractData.push(findProduct.id);
         extractData = new Set(extractData);
         extractData = Array.from(extractData)
@@ -76,12 +76,16 @@ function Detail(props) {
                     <p>{findProduct.content}</p>
                     <p>{findProduct.price}</p>
                     {console.log(findProduct)}
-                    
+
                     <button className="btn btn-danger" onClick={() => {
-                        dispatch(addItem({id : findProduct.id, name : findProduct.title}))
+                        dispatch(addItem({ id: findProduct.id, name: findProduct.title }))
                     }}>주문하기</button>
                 </div>
-                <button className="btn btn-primary" onClick={() => navigate('/cart')}>장바구니로 이동</button>
+                <button className="btn btn-primary" onClick={() => {
+                    startTransition(() => {
+                        navigate('/cart');
+                    });
+                }}>장바구니로 이동</button>
             </div>
             <Nav variant="tabs" defaultActiveKey="link0">
                 {tabs.map((title, index) => (

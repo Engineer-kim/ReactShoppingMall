@@ -1,17 +1,18 @@
 /*eslint-disable*/
 import logo from './logo.svg';
-import { createContext, useEffect, useState } from "react";
+import { createContext, Suspense, useEffect, useState, lazy } from "react";
 import { Navbar, Container, Nav } from 'react-bootstrap'
 import './App.css';
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet, json } from 'react-router-dom';
-import Detail from './routes/Detail';
 import axios from 'axios';
-import Cart from './routes/Cart.js';
-import { useQuery } from 'react-query'; 
- 
+import { useQuery } from 'react-query';
+
 export let Context1 = createContext();
 
+
+const Detail = lazy(() => import('./routes/Detail.js'))
+const Cart = lazy(() => import('./routes/Cart.js'))
 
 function App() {
   useEffect(() => {
@@ -25,7 +26,7 @@ function App() {
   }, []);
 
 
-  let [itemId , clickItem] = useState([]);
+  let [itemId, clickItem] = useState([]);
 
 
 
@@ -35,7 +36,7 @@ function App() {
   let [count, changeCount] = useState(0);
   let [loading, setLoading] = useState(false);
   let [재고] = useState([10, 11, 12]);
-  
+
 
 
   console.log(shoes);
@@ -71,7 +72,7 @@ function App() {
     axios.get('https://codingapple1.github.io/userdata.json')
       .then((a) => { return a.data })
   );
-  
+
   return (
     <div className='App'>
       <Navbar bg="dark" variant="dark">
@@ -81,50 +82,49 @@ function App() {
             <Nav.Link onClick={() => { navigate('/') }}>Home</Nav.Link>
             <Nav.Link onClick={() => { navigate('/detail') }}>Detail</Nav.Link>
           </Nav>
-          <Nav className='ms-auto' style={{color: 'white'}}>
-              {result.data && result.data.name} {/*데이터가 있으면 있는 데이터중 이름이란 벨류의 값을 읽어오도록함*/}
+          <Nav className='ms-auto' style={{ color: 'white' }}>
+            {result.data && result.data.name} {/*데이터가 있으면 있는 데이터중 이름이란 벨류의 값을 읽어오도록함*/}
           </Nav>
         </Container>
       </Navbar>
-      <Routes>
-        <Route path='/' element={
-          <>
-            <div className='main-bg'></div>
-            <div className="container">
-              <div className="row">
-                {/* 로딩 중일 때 */}
-                {loading ? (
-                  <IsLoading />
-                ) : (
-                  <>
-                    {shoes.map((a, i) => (
-                      <Product key={i} shoes={shoes[i]} i={i} />
-                    ))}
-                    {additionalShoes.map((shoe, i) => (
-                      <Product
-                        key={i + shoes.length}
-                        shoes={shoe}
-                        i={i + shoes.length}
-                      />
-                    ))}
-                  </>
-                )}
+      <Suspense fallback={<div>로딩중임</div>}>
+        <Routes>
+          <Route path='/' element={
+            <>
+              <div className='main-bg'></div>
+              <div className="container">
+                <div className="row">
+                  {/* 로딩 중일 때 */}
+                  {loading ? (
+                    <IsLoading />
+                  ) : (
+                    <>
+                      {shoes.map((a, i) => (
+                        <Product key={i} shoes={shoes[i]} i={i} />
+                      ))}
+                      {additionalShoes.map((shoe, i) => (
+                        <Product
+                          key={i + shoes.length}
+                          shoes={shoe}
+                          i={i + shoes.length}
+                        />
+                      ))}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-            <button onClick={getData}>더보기</button>
-          </>
-        }
-        />
-        <Route path="/detail/:id" element={
-          <Context1.Provider value={{재고}}>
+              <button onClick={getData}>더보기</button>
+            </>
+          }
+          />
+          <Route path="/detail/:id" element={
             <Detail shoes={shoes} />
-          </Context1.Provider>
-        } />
-        <Route path='/cart' element= {
-            <Cart/>
-        }/>
-      </Routes>
-
+          } />
+          <Route path='/cart' element={
+            <Cart />
+          } />
+        </Routes>
+      </Suspense>
     </div>
   );
 }
@@ -141,7 +141,7 @@ function Product(props) {
   // console.log("3번 신발 사진:::" + `https://codingapple1.github.io/shop/shoes${props.i+2}.jpg`);
   return (
     <div className="col-md-4">
-       <img src={`https://codingapple1.github.io/shop/shoes` + indexValue + `.jpg`} width="80%" alt={`shoes${parseInt(props.shoes.id) + 1}`} />
+      <img src={`https://codingapple1.github.io/shop/shoes` + indexValue + `.jpg`} width="80%" alt={`shoes${parseInt(props.shoes.id) + 1}`} />
       <h4 onClick={() => goToDetail(props.shoes.id)}>{props.shoes.title}</h4>
       <p>{props.shoes.price}</p>
     </div>
